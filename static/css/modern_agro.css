@@ -1,0 +1,112 @@
+/* Modern AgroSmart Styles */
+body {
+    background: linear-gradient(120deg, #e0ffe0 0%, #b2f7ef 100%);
+    font-family: 'Segoe UI', 'Roboto', Arial, sans-serif;
+    min-height: 100vh;
+}
+
+.navbar {
+    background: #2e7d32;
+    color: #fff;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+    animation: fadeInDown 1s;
+}
+
+.card-agro {
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 4px 24px rgba(46,125,50,0.12);
+    margin-bottom: 2rem;
+    transition: transform 0.2s;
+}
+.card-agro:hover {
+    transform: scale(1.03);
+    box-shadow: 0 8px 32px rgba(46,125,50,0.18);
+}
+
+.btn-agro {
+    background: linear-gradient(90deg, #43ea7a 0%, #2e7d32 100%);
+    color: #fff;
+    border-radius: 8px;
+    font-weight: 600;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.12);
+    transition: background 0.3s, box-shadow 0.3s;
+}
+.btn-agro:hover {
+    background: linear-gradient(90deg, #2e7d32 0%, #43ea7a 100%);
+    box-shadow: 0 4px 16px rgba(46,125,50,0.18);
+}
+
+.table-agro {
+/* ...existing code... */
+/* RESPONSIVE DESIGN */
+@media (max-width: 600px) {
+    .container, .ia-chat-fullscreen, #ia-messages, #ia-chat-form {
+        max-width: 100% !important;
+        width: 100% !important;
+        padding-left: 0 !important;
+        padding-right: 0 !important;
+        border-radius: 0 !important;
+    }
+    #ia-messages {
+        padding: 16px 0 80px 0 !important;
+        font-size: 1rem !important;
+    }
+    #ia-chat-form {
+        flex-direction: column !important;
+        gap: 8px !important;
+        padding: 12px 6px !important;
+        box-shadow: 0 -1px 8px #0066cc22 !important;
+        border-radius: 0.5rem !important;
+    }
+    #ia-chat-input {
+        max-width: 100% !important;
+        font-size: 1rem !important;
+        padding: 12px 10px !important;
+    }
+    #ia-chat-form button {
+        width: 100%;
+        font-size: 1rem !important;
+        padding: 12px 0 !important;
+        margin: 0 !important;
+    }
+    .ia-markdown img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+}
+    background: #f7fff7;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(46,125,50,0.08);
+    animation: fadeInUp 1s;
+}
+
+@keyframes fadeInDown {
+    from { opacity: 0; transform: translateY(-40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.dashboard-title {
+    font-size: 2.2rem;
+    color: #2e7d32;
+    font-weight: 700;
+    margin-bottom: 1.5rem;
+    text-shadow: 0 2px 8px #b2f7ef;
+    animation: fadeInDown 1.2s;
+}
+
+.icon-agro {
+    font-size: 2.5rem;
+    color: #43ea7a;
+    margin-right: 0.5rem;
+    vertical-align: middle;
+}
+
+/* Animación para tarjetas de cultivo */
+.card-agro {
+    animation: fadeInUp 0.8s;
+}

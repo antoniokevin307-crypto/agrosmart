@@ -1,0 +1,14 @@
+body { font-family: system-ui, Arial, sans-serif; margin:0; }
+.topbar { background:#0b6; color:#fff; padding:10px 16px; display:flex; justify-content:space-between; align-items:center; }
+.container { padding:16px; }
+.table { border-collapse: collapse; width:100%; }
+.table th, .table td { border:1px solid #ddd; padding:8px; }
+.btn { background:#0b6; color:#fff; padding:6px 10px; text-decoration:none; border-radius:4px; }
+.cards { display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:12px; }
+.card { border:2px solid #0b6; border-radius:10px; padding:14px; background:linear-gradient(135deg,#f8f8ff 60%,#e0f7fa 100%); box-shadow:0 2px 8px #0b6a1a22; }
+
+/* Mejorar visualización del mapa meteorológico */
+#weather-map { box-shadow:0 2px 16px #0b6a1a33; border:2px solid #0b6; border-radius:12px; }
+.alert { background:#fee; color:#900; padding:10px; border:1px solid #f88; border-radius:6px; }
+.footer { padding:10px 16px; color:#555; }
+.messages { list-style:none; padding:0; }
