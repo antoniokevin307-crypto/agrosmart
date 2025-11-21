@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Editar Perfil</h2>
+<form method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+  {{ form.as_p }}
+  {% if error %}
+    <div style="color:red; margin-bottom:10px;">{{ error }}</div>
+  {% endif %}
+  <button class="btn" type="submit" style="background:#28a745;color:white;">Guardar</button>
+  <a class="btn" href="{% url 'profile' %}" style="background:#6c757d;color:white;">Cancelar</a>
+</form>
+{% endblock %}

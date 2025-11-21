@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Mis Cultivos</h2>
+
+<div style="margin-bottom: 20px;">
+  <a class="btn" href="{% url 'crop_create' %}" style="background-color: #28a745;">+ Nuevo Cultivo</a>
+  {% if crops %}
+  <a class="btn" href="{% url 'download_my_crops_pdf' %}" style="background-color: #0066cc; margin-left: 10px;">📥 Descargar Todos (PDF)</a>
+  {% endif %}
+</div>
+
+<table class="table" style="width: 100%; border-collapse: collapse;">
+  <thead>
+    <tr style="background: #2c5282; color: white;">
+      <th style="padding: 12px; text-align: left;">Nombre</th>
+      <th style="padding: 12px; text-align: left;">Descripción</th>
+      <th style="padding: 12px; text-align: center;">Usuario</th>
+      <th style="padding: 12px; text-align: center;">Ubicación</th>
+      <th style="padding: 12px; text-align: center;">Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+  {% for c in crops %}
+    <tr style="border-bottom: 1px solid #ddd;">
+      <td style="padding: 12px;"><strong>{{ c.name }}</strong></td>
+      <td style="padding: 12px;">{{ c.description|truncatewords:10 }}</td>
+      <td style="padding: 12px; text-align: center;">
+        {% if c.user.profile_photo %}
+          <img src="{{ c.user.profile_photo.url }}" alt="foto" style="height:32px;width:32px;border-radius:50%;vertical-align:middle;margin-right:6px;"/>
+        {% endif %}
+        <div style="display:inline-block; vertical-align:middle; text-align:left;">
+          <div style="font-weight:600;">{{ c.user.display_name|default:c.user.email }}</div>
+          <div style="font-size:0.9rem;color:#666;">{{ c.user.email }}</div>
+        </div>
+      </td>
+      <td style="padding: 12px; text-align: center;">
+        {% if c.latitude and c.longitude %}
+        ({{ c.latitude|floatformat:2 }}, {{ c.longitude|floatformat:2 }})
+        {% else %}
+        N/A
+        {% endif %}
+      </td>
+      <td style="padding: 12px; text-align: center;">
+        <a class="btn" href="{% url 'dashboard_crop' c.id %}" style="background-color: #0066cc; color: white; text-decoration: none; padding: 5px 10px; margin: 0 2px;">👁️ Ver</a>
+        <a class="btn" href="{% url 'download_crop_pdf_user' c.id %}" style="background-color: #28a745; color: white; text-decoration: none; padding: 5px 10px; margin: 0 2px;">📥 PDF</a>
+        <a class="btn" href="{% url 'crop_edit' c.id %}" style="background-color: #ffc107; color: black; text-decoration: none; padding: 5px 10px; margin: 0 2px;">✏️ Editar</a>
+        <a class="btn" href="{% url 'crop_delete' c.id %}" style="background-color: #dc3545; color: white; text-decoration: none; padding: 5px 10px; margin: 0 2px;">🗑️ Eliminar</a>
+      </td>
+    </tr>
+  {% empty %}
+    <tr><td colspan="4" style="padding: 20px; text-align: center; color: #666;">Sin cultivos. <a href="{% url 'crop_create' %}">Crea uno nuevo.</a></td></tr>
+  {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

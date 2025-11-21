@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 20px;">
+    <h1>🔧 Panel de Administración</h1>
+    <p>Total de usuarios: <strong>{{ total_users }}</strong></p>
+    
+    {% if users_data %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px; font-size: 14px;">
+        <thead>
+            <tr style="background: #2c5282; color: white; border-bottom: 2px solid #ddd;">
+                <th style="padding: 12px; text-align: left;">Email</th>
+                <th style="padding: 12px; text-align: left;">Estado</th>
+                <th style="padding: 12px; text-align: center;">Cultivos</th>
+                <th style="padding: 12px; text-align: center;">Registrado</th>
+                <th style="padding: 12px; text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in users_data %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 12px;"><strong>{{ item.user.email }}</strong></td>
+                <td style="padding: 12px;">
+                    {% if item.user.is_verified %}
+                    <span style="color: green; font-weight: bold;">✓ Verificado</span>
+                    {% else %}
+                    <span style="color: #ff9800; font-weight: bold;">⚠ Pendiente</span>
+                    {% endif %}
+                </td>
+                <td style="padding: 12px; text-align: center;"><strong>{{ item.crops_count }}</strong></td>
+                <td style="padding: 12px; text-align: center;">{{ item.user.created_at|date:"d/m/Y" }}</td>
+                <td style="padding: 12px; text-align: center;">
+                    <a href="{% url 'user_detail' item.user.id %}" style="color: #0066cc; text-decoration: none; margin-right: 10px; font-weight: bold;">👁️ Ver</a>
+                    <a href="{% url 'delete_user' item.user.id %}" style="color: #c33; text-decoration: none; font-weight: bold;">🗑️ Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="margin-top: 20px; color: #666;">No hay usuarios registrados.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'crop_list' %}" style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">← Volver a Dashboard</a>
+    </div>
+</div>
+{% endblock %}

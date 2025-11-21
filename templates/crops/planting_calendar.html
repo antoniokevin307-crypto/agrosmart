@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Calendario de siembra para {{ crop.name }}</h2>
+<p>Mes: {{ month }}/{{ year }}</p>
+
+<style>
+  .calendar-table {
+    border-collapse: collapse;
+    width: 100%;
+    max-width: 600px;
+    margin: 20px auto;
+    font-family: Arial, sans-serif;
+  }
+  .calendar-table th, .calendar-table td {
+    border: 1px solid #ddd;
+    text-align: center;
+    padding: 8px;
+  }
+  .calendar-table th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+  }
+  .calendar-table .verde {
+    background-color: #b6fcb6;
+  }
+  .calendar-table .amarillo {
+    background-color: #fff9b1;
+  }
+  .calendar-table .rojo {
+    background-color: #ffb1b1;
+  }
+</style>
+
+<table class="calendar-table">
+  <thead>
+    <tr>
+      <th>Día</th>
+      <th>Recomendación</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for d in calendar_data %}
+      <tr>
+        <td>{{ d.day }}</td>
+        <td class="{{ d.color }}">
+          {% if d.color == 'verde' %}Óptimo{% elif d.color == 'amarillo' %}Regular{% else %}No recomendado{% endif %}
+        </td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>
+
+<a href="{% url 'dashboard' %}" class="btn">Volver al dashboard</a>
+{% endblock %}

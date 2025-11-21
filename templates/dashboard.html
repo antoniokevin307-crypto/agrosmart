@@ -1,0 +1,82 @@
+
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<div class="dashboard-header" style="display:flex;align-items:center;gap:1.2rem;margin-bottom:2rem;flex-wrap:wrap;">
+  <span class="icon-agro" style="font-size:2.2rem;margin-right:.7rem;">🌾</span>
+  <h1 class="dashboard-title" style="margin-bottom:0;margin-right:1.5rem;font-size:2.1rem;">Dashboard de Cultivos</h1>
+</div>
+
+{# Detalle del cultivo seleccionado #}
+
+{# Lista de cultivos #}
+<div class="row">
+  {% for c in crops %}
+  <div class="col-md-4 mb-4">
+    <div class="card card-agro">
+      <div class="card-body">
+        <h5 class="card-title">{{ c.name }}</h5>
+        <p class="card-text">{{ c.description }}</p>
+        <p><strong>Fecha de siembra:</strong> {{ c.sowing_date|date:"d M Y" }}</p>
+        <div class="d-flex flex-wrap gap-2 mt-3">
+          <a href="{% url 'crop_detail' c.id %}" class="btn btn-agro btn-cultivo" target="_blank">🌱 Ver detalles</a>
+          <a href="{% url 'crop_edit' c.id %}" class="btn btn-agro btn-cultivo">✏️ Editar</a>
+          <a href="{% url 'crop_delete' c.id %}" class="btn btn-agro btn-cultivo btn-cancelar">🗑️ Eliminar</a>
+          <a href="{% url 'abono_application' c.id %}" class="btn btn-agro btn-cultivo">🧪 Historial de abonos</a>
+          <a href="{% url 'download_crop_pdf_user' c.id %}" class="btn btn-agro btn-cultivo">📄 PDF</a>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info">No tienes cultivos registrados.</div>
+  </div>
+  {% endfor %}
+</div>
+
+{# --- Mapa meteorológico en tiempo real (Leaflet + OpenWeatherMap tiles opcionales) --- #}
+<section>
+  <h3>Mapa meteorológico (en tiempo real)</h3>
+  <div id="weather-map" style="height:480px; border:1px solid #ddd; margin-bottom:1rem;"></div>
+  <script>
+  window.WEATHER_MAP_CONFIG = JSON.parse("{{ weather_map_config_json|escapejs }}");
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{% static 'js/weather_map.js' %}"></script>
+  {% if not openweather_api_key %}
+  <p style="margin-top:.5rem; font-size:.95rem; color:#444;">Nota: para capas globales de temperatura/nubes/precipitación añade <code>OPENWEATHERMAP_API_KEY</code> en tu <code>.env</code>. Mientras tanto el mapa base (OpenStreetMap) y un marcador con los datos actuales estarán visibles.</p>
+  {% endif %}
+</section>
+{% endblock %}
+<style>
+  .btn-cultivo {
+    min-width: 140px;
+    font-size: 1.08rem;
+    font-weight: 500;
+    border-radius: 0.7rem;
+    padding: 0.55rem 1.1rem;
+    box-shadow: 0 2px 8px #6f42c133;
+    transition: background 0.18s, color 0.18s, box-shadow 0.18s;
+    background: linear-gradient(90deg,#e0ffe0 0%,#b2f7b2 100%);
+    color: #2d6a4f;
+    border: 1px solid #b2f7b2;
+    margin-bottom: 2px;
+  }
+  .btn-cultivo:hover {
+    background: linear-gradient(90deg,#b2f7b2 0%,#e0ffe0 100%);
+    color: #1b4332;
+    box-shadow: 0 4px 16px #6f42c133;
+  }
+  .btn-cancelar {
+    background: linear-gradient(90deg,#ffe0e0 0%,#f7b2b2 100%);
+    color: #a42d2d;
+    border: 1px solid #f7b2b2;
+  }
+  .btn-cancelar:hover {
+    background: linear-gradient(90deg,#f7b2b2 0%,#ffe0e0 100%);
+    color: #6a2d2d;
+  }
+</style>

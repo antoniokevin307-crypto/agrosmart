@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 20px;">
+    <h1>Usuario: {{ user.email }}</h1>
+    
+    <div style="background: #f9f9f9; padding: 15px; border-radius: 5px; margin: 20px 0;">
+        <p><strong>Email:</strong> {{ user.email }}</p>
+        <p><strong>Verificado:</strong> 
+            {% if user.is_verified %}
+            <span style="color: green;">✓ Sí</span>
+            {% else %}
+            <span style="color: red;">No</span>
+            {% endif %}
+        </p>
+        <p><strong>Activo:</strong> 
+            {% if user.is_active %}
+            <span style="color: green;">✓ Sí</span>
+            {% else %}
+            <span style="color: red;">No</span>
+            {% endif %}
+        </p>
+        <p><strong>Creado:</strong> {{ user.created_at|date:"d/m/Y H:i" }}</p>
+    </div>
+    
+    <h2>Cultivos ({{ crops_count }})</h2>
+    
+    {% if crops %}
+    <table style="width: 100%; border-collapse: collapse; margin-top: 20px;">
+        <thead>
+            <tr style="background: #f0f0f0; border-bottom: 2px solid #ddd;">
+                <th style="padding: 10px; text-align: left;">Nombre</th>
+                <th style="padding: 10px; text-align: left;">Descripción</th>
+                <th style="padding: 10px; text-align: center;">País</th>
+                <th style="padding: 10px; text-align: center;">Ubicación</th>
+                <th style="padding: 10px; text-align: center;">Fecha Siembra</th>
+                <th style="padding: 10px; text-align: center;">Acciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for crop in crops %}
+            <tr style="border-bottom: 1px solid #ddd;">
+                <td style="padding: 10px;">{{ crop.name }}</td>
+                <td style="padding: 10px;">{{ crop.description|truncatewords:5 }}</td>
+                <td style="padding: 10px; text-align: center;">{{ crop.country_code }}</td>
+                <td style="padding: 10px; text-align: center;">
+                    {% if crop.latitude and crop.longitude %}
+                    ({{ crop.latitude|floatformat:2 }}, {{ crop.longitude|floatformat:2 }})
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+                <td style="padding: 10px; text-align: center;">
+                    {% if crop.sowing_date %}
+                    {{ crop.sowing_date|date:"d/m/Y" }}
+                    {% else %}
+                    N/A
+                    {% endif %}
+                </td>
+                <td style="padding: 10px; text-align: center;">
+                    <a href="{% url 'download_crop_pdf' crop.id %}" style="color: #0066cc; text-decoration: none; margin-right: 10px;" title="Descargar PDF">📥 PDF</a>
+                    <a href="{% url 'delete_crop_admin' crop.id %}" style="color: #c33; text-decoration: none;" onclick="return confirm('¿Eliminar este cultivo?');">🗑️ Eliminar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    {% else %}
+    <p style="margin-top: 20px; color: #666;">Este usuario no tiene cultivos.</p>
+    {% endif %}
+    
+    <div style="margin-top: 20px;">
+        <a href="{% url 'admin_panel' %}" style="background: #667eea; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin-right: 10px;">Volver</a>
+        <a href="{% url 'download_user_crops_pdf' user.id %}" style="background: #4CAF50; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none; margin-right: 10px;">📥 Descargar Todos los Cultivos (PDF)</a>
+        <a href="{% url 'delete_user' user.id %}" style="background: #c33; color: white; padding: 10px 20px; border-radius: 5px; text-decoration: none;">Eliminar Usuario</a>
+    </div>
+</div>
+{% endblock %}

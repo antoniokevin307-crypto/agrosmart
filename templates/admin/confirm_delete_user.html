@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container" style="padding: 20px; max-width: 500px; margin: 50px auto;">
+    <div style="background: #fee; border: 2px solid #c33; border-radius: 5px; padding: 20px; text-align: center;">
+        <h1 style="color: #c33; margin-bottom: 20px;">Confirmar Eliminación</h1>
+        
+        <p style="margin-bottom: 20px;">¿Estás seguro de que deseas eliminar al usuario <strong>{{ user.email }}</strong>?</p>
+        
+        <p style="color: #666; margin-bottom: 20px;">
+            Este usuario tiene <strong>{{ crops_count }}</strong> cultivo(s) que también serán eliminados.
+            <br><strong>Esta acción no se puede deshacer.</strong>
+        </p>
+        
+        <form method="POST" style="display: inline;">
+            {% csrf_token %}
+            <button type="submit" style="background: #c33; color: white; padding: 10px 30px; border: none; border-radius: 5px; cursor: pointer; font-weight: bold; margin-right: 10px;">
+                Sí, Eliminar
+            </button>
+        </form>
+        
+        <a href="{% url 'user_detail' user.id %}" style="background: #999; color: white; padding: 10px 30px; border-radius: 5px; text-decoration: none; display: inline-block;">
+            Cancelar
+        </a>
+    </div>
+</div>
+{% endblock %}

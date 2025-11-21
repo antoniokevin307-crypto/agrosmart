@@ -1,0 +1,181 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<h1 class="dashboard-title"><span class="icon-agro">🌾</span> Detalle de Cultivo</h1>
+<div class="card card-agro mb-4">
+  <div class="card-body">
+    <h3 class="card-title">{{ crop.name }}</h3>
+    <p class="card-text">{{ crop.description }}</p>
+    <p><strong>Fecha de siembra:</strong> {{ crop.sowing_date|date:"d M Y" }}</p>
+    <div class="d-flex flex-wrap gap-2 mt-3">
+      <a href="{% url 'crop_edit' crop.id %}" class="btn btn-agro">✏️ Editar</a>
+      <a href="{% url 'crop_delete' crop.id %}" class="btn btn-agro">🗑️ Eliminar</a>
+      <a href="{% url 'abono_application' crop.id %}" class="btn btn-agro">🧪 Historial de abonos</a>
+      <a href="{% url 'download_crop_pdf_user' crop.id %}" class="btn btn-agro">📄 PDF</a>
+    </div>
+  </div>
+</div>
+{% if weather %}
+<div class="row mb-4 weather-cards-row justify-content-center">
+  <div class="col-md-3 mb-3">
+    <div class="weather-card animate-weather">
+      <div class="weather-icon">🌡️</div>
+      <div class="weather-label">Clima actual</div>
+      <div class="weather-value">{{ weather.temperature }}°C</div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="weather-card animate-weather">
+      <div class="weather-icon">💧</div>
+      <div class="weather-label">Humedad</div>
+      <div class="weather-value">{{ weather.humidity }}%</div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="weather-card animate-weather">
+      <div class="weather-icon">🌧️</div>
+      <div class="weather-label">Lluvia</div>
+      <div class="weather-value">{{ weather.rain_mm }} mm</div>
+    </div>
+  </div>
+  <div class="col-md-3 mb-3">
+    <div class="weather-card animate-weather">
+      <div class="weather-icon">💨</div>
+      <div class="weather-label">Viento</div>
+      <div class="weather-value">{{ weather.wind_ms|floatformat:2 }} m/s</div>
+    </div>
+  </div>
+</div>
+{% endif %}
+{% if recommendation %}
+<div class="ia-recommendation-card animate-ia-recommendation mb-4">
+  <div class="ia-icon">🤖</div>
+  <div class="ia-label">Recomendación IA</div>
+  <div class="ia-text">{{ recommendation }}</div>
+</div>
+{% endif %}
+{% if error %}
+<div class="alert alert-danger mb-4">
+  <strong>Error:</strong> {{ error }}
+</div>
+{% endif %}
+<section>
+  <div class="weather-map-card animate-weather-map mb-4">
+    <div class="weather-map-icon">🗺️</div>
+    <div class="weather-map-label">Mapa meteorológico (en tiempo real)</div>
+    <div id="weather-map" style="height:480px; border:1px solid #ddd; margin-bottom:1rem; border-radius:1rem; box-shadow:0 2px 16px #0d6efd22;"></div>
+  </div>
+  <script>
+  window.WEATHER_MAP_CONFIG = JSON.parse("{{ weather_map_config_json|escapejs }}");
+  </script>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"/>
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="{% static 'js/weather_map.js' %}"></script>
+  {% if not openweather_api_key %}
+  <p style="margin-top:.5rem; font-size:.95rem; color:#444;">Nota: para capas globales de temperatura/nubes/precipitación añade <code>OPENWEATHERMAP_API_KEY</code> en tu <code>.env</code>. Mientras tanto el mapa base (OpenStreetMap) y un marcador con los datos actuales estarán visibles.</p>
+  {% endif %}
+</section>
+<style>
+.weather-cards-row {
+  margin-bottom: 2rem;
+}
+.weather-card {
+  background: linear-gradient(90deg,#e0eafc 0%,#cfdef3 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px #19875422;
+  padding: 2rem 1.2rem 1.2rem 1.2rem;
+  text-align: center;
+  transition: transform 0.4s cubic-bezier(.4,0,.2,1), box-shadow 0.4s cubic-bezier(.4,0,.2,1);
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  animation: fadeInWeather 0.8s forwards;
+}
+.weather-card .weather-icon {
+  font-size: 2.5rem;
+  margin-bottom: 0.5rem;
+}
+.weather-card .weather-label {
+  font-weight: bold;
+  color: #198754;
+  font-size: 1.1rem;
+  margin-bottom: 0.3rem;
+}
+.weather-card .weather-value {
+  font-size: 1.5rem;
+  color: #0d6efd;
+  font-weight: bold;
+}
+.weather-card.animate-weather:nth-child(1) { animation-delay: 0.1s; }
+.weather-card.animate-weather:nth-child(2) { animation-delay: 0.2s; }
+.weather-card.animate-weather:nth-child(3) { animation-delay: 0.3s; }
+.weather-card.animate-weather:nth-child(4) { animation-delay: 0.4s; }
+@keyframes fadeInWeather {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.ia-recommendation-card {
+  background: linear-gradient(90deg,#e0eafc 0%,#d4fc79 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px #6f42c122;
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  animation: fadeInIA 0.8s forwards;
+}
+.ia-recommendation-card .ia-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+.ia-recommendation-card .ia-label {
+  font-weight: bold;
+  color: #6f42c1;
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+}
+.ia-recommendation-card .ia-text {
+  font-size: 1.18rem;
+  color: #198754;
+  font-weight: 500;
+  margin-top: 0.5rem;
+}
+.animate-ia-recommendation { animation-delay: 0.5s; }
+@keyframes fadeInIA {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+.weather-map-card {
+  background: linear-gradient(90deg,#e0eafc 0%,#d4fc79 100%);
+  border-radius: 1.2rem;
+  box-shadow: 0 4px 24px #0d6efd22;
+  padding: 1.5rem 1.2rem;
+  text-align: center;
+  opacity: 0;
+  transform: translateY(40px) scale(0.97);
+  animation: fadeInWeatherMap 0.8s forwards;
+}
+.weather-map-card .weather-map-icon {
+  font-size: 2.2rem;
+  margin-bottom: 0.5rem;
+}
+.weather-map-card .weather-map-label {
+  font-weight: bold;
+  color: #0d6efd;
+  font-size: 1.15rem;
+  margin-bottom: 0.3rem;
+  letter-spacing: 1px;
+}
+.animate-weather-map { animation-delay: 0.7s; }
+@keyframes fadeInWeatherMap {
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+</style>
+{% endblock %}

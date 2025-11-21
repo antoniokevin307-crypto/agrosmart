@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Mi Perfil</h2>
+<div style="display:flex; gap:1rem; align-items:center;">
+  {% if user_obj.profile_photo %}
+    <img src="{{ user_obj.profile_photo.url }}" alt="foto" style="height:96px;width:96px;border-radius:8px;object-fit:cover;"/>
+  {% endif %}
+  <div>
+    <h3>{{ user_obj.display_name|default:user_obj.email }}</h3>
+    <p style="color:#666;">{{ user_obj.email }}</p>
+    <p>{{ user_obj.bio }}</p>
+    <a class="btn" href="{% url 'profile_edit' %}" style="background:#0066cc;color:white;">Editar perfil</a>
+  </div>
+</div>
+{% endblock %}
